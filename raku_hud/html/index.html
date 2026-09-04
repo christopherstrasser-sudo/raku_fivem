@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Raku HUD</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main id="hud" class="hud">
+    <section class="identity-card glass">
+      <div class="brand-mark">R</div>
+      <div class="identity-copy">
+        <span class="eyebrow">RAKU ROLEPLAY</span>
+        <strong id="job">Unemployed</strong>
+        <span id="grade">Civilian</span>
+      </div>
+      <div class="player-id">#<span id="playerId">0</span></div>
+    </section>
+
+    <section class="money-row">
+      <article class="money-card glass">
+        <div class="money-icon">$</div>
+        <div>
+          <span>CASH</span>
+          <strong id="cash">$0</strong>
+        </div>
+      </article>
+      <article class="money-card glass">
+        <div class="money-icon bank">B</div>
+        <div>
+          <span>BANK</span>
+          <strong id="bank">$0</strong>
+        </div>
+      </article>
+    </section>
+
+    <section class="status-grid">
+      <article class="status-card glass" data-status="health">
+        <div class="status-head"><span>HEALTH</span><strong id="healthValue">100%</strong></div>
+        <div class="track"><div id="healthBar" class="fill health"></div></div>
+      </article>
+      <article class="status-card glass" data-status="armor">
+        <div class="status-head"><span>ARMOR</span><strong id="armorValue">0%</strong></div>
+        <div class="track"><div id="armorBar" class="fill armor"></div></div>
+      </article>
+      <article class="status-card glass" data-status="hunger">
+        <div class="status-head"><span>HUNGER</span><strong id="hungerValue">100%</strong></div>
+        <div class="track"><div id="hungerBar" class="fill hunger"></div></div>
+      </article>
+      <article class="status-card glass" data-status="thirst">
+        <div class="status-head"><span>THIRST</span><strong id="thirstValue">100%</strong></div>
+        <div class="track"><div id="thirstBar" class="fill thirst"></div></div>
+      </article>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
