@@ -8,8 +8,16 @@ local cached = {
     grade = '',
     hunger = 100,
     thirst = 100,
+    stress = 0,
     id = GetPlayerServerId(PlayerId())
 }
+
+local function clamp(value, min, max)
+    value = tonumber(value) or 0
+    if value < min then return min end
+    if value > max then return max end
+    return value
+end
 
 local function getAccountMoney(name)
     local playerData = ESX.GetPlayerData()
@@ -37,7 +45,17 @@ local function refreshPlayerData()
     cached.id = GetPlayerServerId(PlayerId())
 end
 
-RegisterNetEvent('esx:playerLoaded', function(xPlayer)
+local function readStatus(name, fallback)
+    local value = fallback
+    TriggerEvent('esx_status:getStatus', name, function(status)
+        if status and status.getPercent then
+            value = math.floor(status.getPercent())
+        end
+    end)
+    return value
+end
+
+RegisterNetEvent('esx:playerLoaded', function()
     refreshPlayerData()
 end)
 
@@ -52,49 +70,92 @@ RegisterNetEvent('esx:setAccountMoney', function(account)
     if account.name == 'bank' then cached.bank = account.money or 0 end
 end)
 
+-- Optional compatibility hook for stress resources.
+RegisterNetEvent('raku_hud:setStress', function(value)
+    cached.stress = clamp(value, 0, 100)
+end)
+
 CreateThread(function()
     Wait(1500)
     refreshPlayerData()
 
     while true do
         local ped = PlayerPedId()
-        local health = math.max(0, math.min(100, GetEntityHealth(ped) - 100))
-        local armor = math.max(0, math.min(100, GetPedArmour(ped)))
+        local player = PlayerId()
 
-        TriggerEvent('esx_status:getStatus', 'hunger', function(status)
-            if status and status.getPercent then
-                cached.hunger = math.floor(status.getPercent())
-            end
-        end)
+        local health = clamp(GetEntityHealth(ped) - 100, 0, 100)
+        local armor = clamp(GetPedArmour(ped), 0, 100)
+        local stamina = clamp(100.0 - GetPlayerSprintStaminaRemaining(player), 0, 100)
 
-        TriggerEvent('esx_status:getStatus', 'thirst', function(status)
-            if status and status.getPercent then
-                cached.thirst = math.floor(status.getPercent())
-            end
-        end)
+        -- Native returns seconds of underwater time remaining (normally ~10 sec).
+        local underwater = IsPedSwimmingUnderWater(ped)
+        local oxygen = 100
+        if underwater then
+            oxygen = clamp((GetPlayerUnderwaterTimeRemaining(player) / 10.0) * 100.0, 0, 100)
+        end
+
+        cached.hunger = readStatus('hunger', cached.hunger)
+        cached.thirst = readStatus('thirst', cached.thirst)
+
+        -- If a status resource exposes stress through esx_status we use it.
+        cached.stress = readStatus('stress', cached.stress)
+
+        local talking = NetworkIsPlayerTalking(player)
+        local inVehicle = IsPedInAnyVehicle(ped, false)
+        local vehicleHealth = 100
+        local speed = 0
+
+        if inVehicle then
+            local vehicle = GetVehiclePedIsIn(ped, false)
+            vehicleHealth = clamp(GetVehicleEngineHealth(vehicle) / 10.0, 0, 100)
+            speed = math.floor(GetEntitySpeed(vehicle) * 3.6 + 0.5)
+        end
 
         SendNUIMessage({
             action = 'update',
             visible = hudVisible,
-            health = health,
-            armor = armor,
+            health = math.floor(health + 0.5),
+            armor = math.floor(armor + 0.5),
+            stamina = math.floor(stamina + 0.5),
+            oxygen = math.floor(oxygen + 0.5),
+            underwater = underwater,
             hunger = cached.hunger,
             thirst = cached.thirst,
+            stress = cached.stress,
             cash = cached.cash,
             bank = cached.bank,
             job = cached.job,
             grade = cached.grade,
-            playerId = cached.id
+            playerId = cached.id,
+            talking = talking,
+            inVehicle = inVehicle,
+            vehicleHealth = math.floor(vehicleHealth + 0.5),
+            speed = speed
         })
 
-        Wait(500)
+        Wait(200)
     end
 end)
 
 CreateThread(function()
     while true do
         refreshPlayerData()
-        Wait(5000)
+        Wait(4000)
+    end
+end)
+
+-- Hide GTA's default health/armour/cash HUD elements while keeping minimap/radar usable.
+CreateThread(function()
+    while true do
+        HideHudComponentThisFrame(3)  -- CASH
+        HideHudComponentThisFrame(4)  -- MP CASH
+        HideHudComponentThisFrame(6)  -- VEHICLE NAME
+        HideHudComponentThisFrame(7)  -- AREA NAME
+        HideHudComponentThisFrame(8)  -- VEHICLE CLASS
+        HideHudComponentThisFrame(9)  -- STREET NAME
+        HideHudComponentThisFrame(13) -- CASH CHANGE
+        HideHudComponentThisFrame(20) -- WEAPON STATS
+        Wait(0)
     end
 end)
 
