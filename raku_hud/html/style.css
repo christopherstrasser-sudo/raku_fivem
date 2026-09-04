@@ -1,0 +1,235 @@
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: transparent;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #f6f8fb;
+}
+
+:root {
+  --panel: rgba(9, 13, 20, 0.82);
+  --panel-soft: rgba(14, 20, 30, 0.74);
+  --line: rgba(255, 255, 255, 0.08);
+  --muted: #8f9bad;
+  --health: #ff5f73;
+  --armor: #5aa9ff;
+  --hunger: #f2b84b;
+  --thirst: #4bd8e8;
+  --accent: #7c6cff;
+}
+
+.hud {
+  position: absolute;
+  left: 2.2vw;
+  bottom: 3.2vh;
+  width: min(430px, 28vw);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transform-origin: left bottom;
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.hud.hidden {
+  opacity: 0;
+  transform: translateY(14px) scale(.98);
+  pointer-events: none;
+}
+
+.glass {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.015)),
+    var(--panel);
+  border: 1px solid var(--line);
+  box-shadow: 0 12px 34px rgba(0, 0, 0, .28);
+  backdrop-filter: blur(12px);
+}
+
+.identity-card {
+  min-height: 82px;
+  border-radius: 16px;
+  padding: 12px 14px;
+  display: grid;
+  grid-template-columns: 54px 1fr auto;
+  gap: 12px;
+  align-items: center;
+}
+
+.brand-mark {
+  width: 54px;
+  height: 54px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: linear-gradient(145deg, #6657ff, #35b8ff);
+  box-shadow: 0 8px 22px rgba(91, 108, 255, .32);
+  font-weight: 900;
+  font-size: 25px;
+  letter-spacing: -.06em;
+}
+
+.identity-copy {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.eyebrow {
+  color: #8794a7;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .18em;
+}
+
+.identity-copy strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 17px;
+}
+
+.identity-copy > span:last-child {
+  color: #9eabba;
+  font-size: 11px;
+}
+
+.player-id {
+  align-self: start;
+  padding: 7px 9px;
+  border-radius: 999px;
+  color: #b7c2cf;
+  border: 1px solid rgba(255,255,255,.08);
+  background: rgba(255,255,255,.035);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .08em;
+}
+
+.money-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.money-card {
+  min-width: 0;
+  padding: 11px 12px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.money-icon {
+  flex: 0 0 34px;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: rgba(81, 217, 132, .12);
+  color: #62df96;
+  font-size: 16px;
+  font-weight: 900;
+}
+
+.money-icon.bank {
+  background: rgba(90, 169, 255, .12);
+  color: #6fb5ff;
+}
+
+.money-card span {
+  display: block;
+  color: #7f8c9d;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: .16em;
+  margin-bottom: 3px;
+}
+
+.money-card strong {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 15px;
+}
+
+.status-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.status-card {
+  position: relative;
+  overflow: hidden;
+  padding: 11px 12px 12px;
+  border-radius: 14px;
+  transition: border-color 160ms ease, transform 160ms ease;
+}
+
+.status-card.warning {
+  border-color: rgba(255, 94, 94, .34);
+}
+
+.status-card.critical {
+  animation: criticalPulse 1.15s ease-in-out infinite;
+}
+
+.status-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 9px;
+}
+
+.status-head span {
+  color: #8390a1;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: .16em;
+}
+
+.status-head strong {
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.track {
+  width: 100%;
+  height: 5px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255,255,255,.065);
+}
+
+.fill {
+  width: 0%;
+  height: 100%;
+  border-radius: inherit;
+  transition: width 260ms ease;
+}
+
+.fill.health { background: linear-gradient(90deg, #ff526b, #ff7d8f); box-shadow: 0 0 16px rgba(255,82,107,.25); }
+.fill.armor { background: linear-gradient(90deg, #4a95ff, #71c4ff); box-shadow: 0 0 16px rgba(74,149,255,.25); }
+.fill.hunger { background: linear-gradient(90deg, #e8a934, #ffd268); box-shadow: 0 0 16px rgba(232,169,52,.22); }
+.fill.thirst { background: linear-gradient(90deg, #35bfd6, #68e5ef); box-shadow: 0 0 16px rgba(53,191,214,.22); }
+
+@keyframes criticalPulse {
+  0%, 100% { box-shadow: 0 12px 34px rgba(0,0,0,.28); }
+  50% { box-shadow: 0 12px 38px rgba(255,64,84,.16); }
+}
+
+@media (max-width: 1400px) {
+  .hud { width: min(390px, 31vw); }
+}
+
+@media (max-width: 1100px) {
+  .hud { width: 360px; left: 18px; bottom: 18px; }
+}
