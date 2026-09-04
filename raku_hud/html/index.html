@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="de">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,50 +8,79 @@
 </head>
 <body>
   <main id="hud" class="hud">
-    <section class="identity-card glass">
-      <div class="brand-mark">R</div>
-      <div class="identity-copy">
-        <span class="eyebrow">RAKU ROLEPLAY</span>
-        <strong id="job">Unemployed</strong>
-        <span id="grade">Civilian</span>
+    <section class="player-panel">
+      <div class="player-line">
+        <div class="server-mark">R</div>
+        <div class="job-copy">
+          <span class="overline">RAKU ROLEPLAY</span>
+          <strong id="job">Arbeitslos</strong>
+          <span id="grade">Zivilist</span>
+        </div>
+        <div class="id-chip">ID <b id="playerId">0</b></div>
       </div>
-      <div class="player-id">#<span id="playerId">0</span></div>
+
+      <div class="finance-row">
+        <div class="finance-chip cash-chip">
+          <span class="finance-icon">$</span>
+          <div><small>BARGELD</small><strong id="cash">$0</strong></div>
+        </div>
+        <div class="finance-chip bank-chip">
+          <span class="finance-icon">B</span>
+          <div><small>BANK</small><strong id="bank">$0</strong></div>
+        </div>
+        <div id="voiceChip" class="voice-chip">
+          <span class="voice-dot"></span>
+          <span id="voiceLabel">VOICE</span>
+        </div>
+      </div>
     </section>
 
-    <section class="money-row">
-      <article class="money-card glass">
-        <div class="money-icon">$</div>
-        <div>
-          <span>CASH</span>
-          <strong id="cash">$0</strong>
-        </div>
-      </article>
-      <article class="money-card glass">
-        <div class="money-icon bank">B</div>
-        <div>
-          <span>BANK</span>
-          <strong id="bank">$0</strong>
-        </div>
-      </article>
+    <section class="status-dock" aria-label="Spielerstatus">
+      <div class="stat health" data-status="health" title="Gesundheit">
+        <div class="ring"><span class="icon">♥</span></div>
+        <div class="stat-copy"><small>HP</small><b id="healthValue">100</b></div>
+      </div>
+
+      <div class="stat armor" data-status="armor" title="Rüstung">
+        <div class="ring"><span class="icon">◆</span></div>
+        <div class="stat-copy"><small>ARM</small><b id="armorValue">0</b></div>
+      </div>
+
+      <div class="stat stamina" data-status="stamina" title="Ausdauer">
+        <div class="ring"><span class="icon">↯</span></div>
+        <div class="stat-copy"><small>STA</small><b id="staminaValue">100</b></div>
+      </div>
+
+      <div class="dock-separator"></div>
+
+      <div class="stat hunger" data-status="hunger" title="Hunger">
+        <div class="ring"><span class="icon">●</span></div>
+        <div class="stat-copy"><small>FOOD</small><b id="hungerValue">100</b></div>
+      </div>
+
+      <div class="stat thirst" data-status="thirst" title="Durst">
+        <div class="ring"><span class="icon">◆</span></div>
+        <div class="stat-copy"><small>WATER</small><b id="thirstValue">100</b></div>
+      </div>
+
+      <div id="oxygenStat" class="stat oxygen contextual" data-status="oxygen" title="Sauerstoff">
+        <div class="ring"><span class="icon">◌</span></div>
+        <div class="stat-copy"><small>O2</small><b id="oxygenValue">100</b></div>
+      </div>
+
+      <div id="stressStat" class="stat stress contextual" data-status="stress" title="Stress">
+        <div class="ring"><span class="icon">!</span></div>
+        <div class="stat-copy"><small>STR</small><b id="stressValue">0</b></div>
+      </div>
     </section>
 
-    <section class="status-grid">
-      <article class="status-card glass" data-status="health">
-        <div class="status-head"><span>HEALTH</span><strong id="healthValue">100%</strong></div>
-        <div class="track"><div id="healthBar" class="fill health"></div></div>
-      </article>
-      <article class="status-card glass" data-status="armor">
-        <div class="status-head"><span>ARMOR</span><strong id="armorValue">0%</strong></div>
-        <div class="track"><div id="armorBar" class="fill armor"></div></div>
-      </article>
-      <article class="status-card glass" data-status="hunger">
-        <div class="status-head"><span>HUNGER</span><strong id="hungerValue">100%</strong></div>
-        <div class="track"><div id="hungerBar" class="fill hunger"></div></div>
-      </article>
-      <article class="status-card glass" data-status="thirst">
-        <div class="status-head"><span>THIRST</span><strong id="thirstValue">100%</strong></div>
-        <div class="track"><div id="thirstBar" class="fill thirst"></div></div>
-      </article>
+    <section id="vehiclePanel" class="vehicle-panel hidden-panel">
+      <div class="speed"><strong id="speed">0</strong><small>KM/H</small></div>
+      <div class="vehicle-health">
+        <span>MOTOR</span>
+        <div class="vehicle-track"><i id="vehicleHealthBar"></i></div>
+        <b id="vehicleHealthValue">100%</b>
+      </div>
     </section>
   </main>
 
