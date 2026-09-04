@@ -70,7 +70,6 @@ RegisterNetEvent('esx:setAccountMoney', function(account)
     if account.name == 'bank' then cached.bank = account.money or 0 end
 end)
 
--- Optional compatibility hook for stress resources.
 RegisterNetEvent('raku_hud:setStress', function(value)
     cached.stress = clamp(value, 0, 100)
 end)
@@ -85,9 +84,8 @@ CreateThread(function()
 
         local health = clamp(GetEntityHealth(ped) - 100, 0, 100)
         local armor = clamp(GetPedArmour(ped), 0, 100)
-        local stamina = clamp(100.0 - GetPlayerSprintStaminaRemaining(player), 0, 100)
+        local stamina = clamp(GetPlayerSprintStaminaRemaining(player), 0, 100)
 
-        -- Native returns seconds of underwater time remaining (normally ~10 sec).
         local underwater = IsPedSwimmingUnderWater(ped)
         local oxygen = 100
         if underwater then
@@ -96,8 +94,6 @@ CreateThread(function()
 
         cached.hunger = readStatus('hunger', cached.hunger)
         cached.thirst = readStatus('thirst', cached.thirst)
-
-        -- If a status resource exposes stress through esx_status we use it.
         cached.stress = readStatus('stress', cached.stress)
 
         local talking = NetworkIsPlayerTalking(player)
@@ -144,17 +140,16 @@ CreateThread(function()
     end
 end)
 
--- Hide GTA's default health/armour/cash HUD elements while keeping minimap/radar usable.
 CreateThread(function()
     while true do
-        HideHudComponentThisFrame(3)  -- CASH
-        HideHudComponentThisFrame(4)  -- MP CASH
-        HideHudComponentThisFrame(6)  -- VEHICLE NAME
-        HideHudComponentThisFrame(7)  -- AREA NAME
-        HideHudComponentThisFrame(8)  -- VEHICLE CLASS
-        HideHudComponentThisFrame(9)  -- STREET NAME
-        HideHudComponentThisFrame(13) -- CASH CHANGE
-        HideHudComponentThisFrame(20) -- WEAPON STATS
+        HideHudComponentThisFrame(3)
+        HideHudComponentThisFrame(4)
+        HideHudComponentThisFrame(6)
+        HideHudComponentThisFrame(7)
+        HideHudComponentThisFrame(8)
+        HideHudComponentThisFrame(9)
+        HideHudComponentThisFrame(13)
+        HideHudComponentThisFrame(20)
         Wait(0)
     end
 end)
