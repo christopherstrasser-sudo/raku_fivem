@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-
 :root {
   --bg: #070a0f;
   --panel: rgba(10, 15, 23, 0.66);
@@ -17,14 +15,12 @@ html, body {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  font-family: Inter, Arial, sans-serif;
+  font-family: "Segoe UI", Arial, sans-serif;
   background: var(--bg);
   color: var(--text);
 }
 
-body {
-  position: relative;
-}
+body { position: relative; }
 
 .scene {
   position: absolute;
@@ -218,9 +214,7 @@ h1 span {
   letter-spacing: 0.08em;
 }
 
-.loading-copy strong {
-  font-size: 20px;
-}
+.loading-copy strong { font-size: 20px; }
 
 .progress-track {
   height: 7px;
@@ -253,9 +247,7 @@ footer {
   letter-spacing: 0.2em;
 }
 
-.footer-center {
-  color: #b9c5d2;
-}
+.footer-center { color: #b9c5d2; }
 
 @keyframes drift {
   from { transform: perspective(700px) rotateX(62deg) translateY(28%) translateX(0); }
